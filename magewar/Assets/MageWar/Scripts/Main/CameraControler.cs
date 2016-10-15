@@ -15,7 +15,6 @@ public class CameraControler : MonoBehaviour
     {
         offsets = new Vector3[points.Length];
         target = GameObject.FindGameObjectWithTag("Player");
-        //offsets = transform.position - target.transform.position;
         for(int i = 0; i < points.Length; i++)
         {
             offsets[i] = points[i].position - target.transform.position;
@@ -30,7 +29,17 @@ public class CameraControler : MonoBehaviour
         newPosition.z = target.transform.position.z + offsets[pointsState].z;
         transform.position = Vector3.Lerp(transform.position, newPosition, 5.0f * Time.deltaTime);
 
-        bool button = Input.GetButtonDown("ZoomIn");
-        Debug.Log("zoomin " + button);
+        if (GamepadManager.GetButtonDown(GamepadManager.KeyMean.ZoomIn))
+        {
+            pointsState++;
+            if (pointsState >= points.Length)
+                pointsState = 0;
+        }
+        if (GamepadManager.GetButtonDown(GamepadManager.KeyMean.ZoomOut))
+        {
+            pointsState--;
+            if (pointsState < 0)
+                pointsState = points.Length - 1;
+        }
     }
 }
