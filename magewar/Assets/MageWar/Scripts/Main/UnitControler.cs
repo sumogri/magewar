@@ -22,6 +22,10 @@ public class UnitControler : MonoBehaviour {
     {
         get { return job; }
     }
+    public int MovePower
+    {
+        get { return movepow; }
+    }
     #endregion
 
     // Use this for initialization

@@ -12,6 +12,7 @@ public class UnitStateControler : MonoBehaviour {
         images = gameObject.GetComponentsInChildren<Image>();
         texts = gameObject.GetComponentsInChildren<Text>();
         canvas = gameObject.GetComponent<Canvas>();
+        this.Hide();
     }
 
     // Update is called once per frame

@@ -8,12 +8,13 @@ public class CursorControler : MonoBehaviour {
     private float asixInputingTime; //アナログスティックの連続入力時間
 
     private UnitStateControler unitState;   //ユニット状態を表示するUIのコントローラ
-    
+    private MoveAbleUI moveableUI;  //移動範囲UI    
 
     // Use this for initialization
     void Start () {
         unitState = GameObject.Find("UnitState").GetComponent<UnitStateControler>();
-	}
+        moveableUI = GameObject.Find("MoveAbleArea").GetComponent<MoveAbleUI>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -40,6 +41,14 @@ public class CursorControler : MonoBehaviour {
         if (other.tag == "Unit")
         {
             unitState.Hide();
+        }
+    }
+
+    void OnTriggerStay(Collider other)
+    {
+        if (Input.GetButtonDown("Submit"))
+        {
+            moveableUI.Activeate(gameObject.transform.position, other.GetComponent<UnitControler>().MovePower);
         }
     }
 
