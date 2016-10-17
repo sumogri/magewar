@@ -15,13 +15,13 @@ public class CursorControler : MonoBehaviour {
     private Material cursorMat;   //カーソルのマテリアル(デバッグ用)
     private UnitControler unitControler;    //選択中のユニット
     private bool isChosing = false; //ユニットを移動選択中か
-    private Queue<Vector3> movedPosQue;
+    private LinkedList<Vector3> movedPosList;
 
     // Use this for initialization
     void Start () {
         unitState = GameObject.Find("UnitState").GetComponent<UnitStateControler>();
         moveableUI = GameObject.Find("MoveAbleArea").GetComponent<MoveAbleUI>();
-        movedPosQue = new Queue<Vector3>();
+        movedPosList = new LinkedList<Vector3>();
     }
 	
 	// Update is called once per frame
@@ -36,14 +36,14 @@ public class CursorControler : MonoBehaviour {
 
         if (Input.GetButtonDown("Cancel") && isChosing)
         {
-            foreach(Vector3 vec in movedPosQue)
+            foreach(Vector3 vec in movedPosList)
             {
                 Debug.Log(vec);
             }
             cursorMat.color = Color.red;
             moveableUI.Hide();
             isChosing = false;
-            unitControler.SetMove(movedPosQue);
+            unitControler.SetMove(movedPosList);
         }
 
     }
@@ -135,13 +135,13 @@ public class CursorControler : MonoBehaviour {
         #region カーソルの移動をユニットに伝えるための処理
         if (isChosing)
         {
-            if (movedPosQue.Count != 0 && Vector3.Equals(moveVec * -1, movedPosQue.Peek()))
+            if (movedPosList.Count != 0 && (moveVec * -1) == movedPosList.Last.Value)
             {
-                movedPosQue.Dequeue();
+                movedPosList.RemoveLast();
             }
             else
             {
-                movedPosQue.Enqueue(moveVec);
+                movedPosList.AddLast(moveVec);
             }
         }
         #endregion

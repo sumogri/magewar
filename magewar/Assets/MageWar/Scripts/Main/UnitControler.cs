@@ -10,7 +10,7 @@ public class UnitControler : MonoBehaviour {
     protected string job = "みならい魔女"; //職業名
     #endregion
     
-    protected Queue<Vector3> moveToAngles;   //移動方向群
+    protected LinkedList<Vector3> moveToAngles;   //移動方向群
     protected float moveTime = 0.5f; //1マスあたりの移動に使う時間
     private bool isMoveing = false; //移動中か
     private float moveStartTime; //移動先セットされた時間
@@ -52,7 +52,8 @@ public class UnitControler : MonoBehaviour {
                 if(moveToAngles.Count > 0)
                 {
                     startPos = endPos;
-                    endPos = startPos + moveToAngles.Dequeue() * 2f;
+                    endPos = startPos + moveToAngles.First.Value * 2f;
+                    moveToAngles.RemoveFirst();
                     moveStartTime = Time.timeSinceLevelLoad;
                 }
                 else
@@ -65,12 +66,13 @@ public class UnitControler : MonoBehaviour {
         }
 	}
     
-    public void SetMove(Queue<Vector3> value)
+    public void SetMove(LinkedList<Vector3> value)
     {
         startPos = gameObject.transform.position;
         if (value.Count > 0)
         {
-            endPos = startPos + value.Dequeue() * 2f;
+            endPos = startPos + value.First.Value* 2f;
+            value.RemoveFirst();
         }
         moveStartTime = Time.timeSinceLevelLoad;
         moveToAngles = value;
