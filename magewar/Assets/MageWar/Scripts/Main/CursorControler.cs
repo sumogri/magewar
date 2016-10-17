@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CursorControler : MonoBehaviour {
     private float speed = 2f; //カーソルの一回当たりの移動量
@@ -8,12 +9,19 @@ public class CursorControler : MonoBehaviour {
     private float asixInputingTime; //アナログスティックの連続入力時間
 
     private UnitStateControler unitState;   //ユニット状態を表示するUIのコントローラ
-    private MoveAbleUI moveableUI;  //移動範囲UI    
+    private MoveAbleUI moveableUI;  //移動範囲UI
+
+    [SerializeField]
+    private Material cursorMat;   //カーソルのマテリアル(デバッグ用)
+    private UnitControler unitControler;    //選択中のユニット
+    private bool isChosing = false; //ユニットを移動選択中か
+    private Queue<Vector3> movedPosQue;
 
     // Use this for initialization
     void Start () {
         unitState = GameObject.Find("UnitState").GetComponent<UnitStateControler>();
         moveableUI = GameObject.Find("MoveAbleArea").GetComponent<MoveAbleUI>();
+        movedPosQue = new Queue<Vector3>();
     }
 	
 	// Update is called once per frame
@@ -24,6 +32,18 @@ public class CursorControler : MonoBehaviour {
         if (getAsix(ref hor, ref var))
         {
             this.moveUpdate(hor, var);
+        }
+
+        if (Input.GetButtonDown("Cancel") && isChosing)
+        {
+            foreach(Vector3 vec in movedPosQue)
+            {
+                Debug.Log(vec);
+            }
+            cursorMat.color = Color.red;
+            moveableUI.Hide();
+            isChosing = false;
+            unitControler.SetMove(movedPosQue);
         }
 
     }
@@ -46,9 +66,12 @@ public class CursorControler : MonoBehaviour {
 
     void OnTriggerStay(Collider other)
     {
-        if (Input.GetButtonDown("Submit"))
+        if (Input.GetButtonDown("Submit") && !isChosing)
         {
-            moveableUI.Activeate(gameObject.transform.position, other.GetComponent<UnitControler>().MovePower);
+            cursorMat.color = Color.blue;
+            unitControler = other.GetComponent<UnitControler>();
+            moveableUI.Activeate(gameObject.transform.position, unitControler.MovePower);
+            isChosing = true;
         }
     }
 
@@ -76,7 +99,7 @@ public class CursorControler : MonoBehaviour {
         else
         {
             asixInputingTime = 0;
-            return true;
+            return false;
         }
         #endregion
 
@@ -90,21 +113,37 @@ public class CursorControler : MonoBehaviour {
     /// <param name="var">垂直方向のAsix値</param>
     private void moveUpdate(float hor,float var)
     {
+        Vector3 moveVec = Vector3.zero;
         if (hor > 0.5)
         {
-            gameObject.transform.position += Vector3.right * speed;
+            moveVec = Vector3.right;
         }
         else if (hor < -0.5)
         {
-            gameObject.transform.position += Vector3.left * speed;
+            moveVec = Vector3.left;
         }
         if (var > 0.5)
         {
-            gameObject.transform.position += Vector3.forward * speed;
+            moveVec = Vector3.forward;
         }
         else if (var < -0.5)
         {
-            gameObject.transform.position += Vector3.back * speed;
+            moveVec = Vector3.back;
         }
+        gameObject.transform.position += moveVec * speed;
+
+        #region カーソルの移動をユニットに伝えるための処理
+        if (isChosing)
+        {
+            if (movedPosQue.Count != 0 && Vector3.Equals(moveVec * -1, movedPosQue.Peek()))
+            {
+                movedPosQue.Dequeue();
+            }
+            else
+            {
+                movedPosQue.Enqueue(moveVec);
+            }
+        }
+        #endregion
     }
 }

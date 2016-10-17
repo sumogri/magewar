@@ -4,10 +4,13 @@ using System.Collections;
 
 public class MoveAbleUI : MonoBehaviour {
     private Image able;
+    private Canvas canvas;
 
 	// Use this for initialization
 	void Start () {
         able = gameObject.GetComponentInChildren < Image >();
+        canvas = gameObject.GetComponent<Canvas>();
+        this.Hide();
 	}
 	
 	// Update is called once per frame
@@ -27,6 +30,12 @@ public class MoveAbleUI : MonoBehaviour {
                 
             }
         }
+        canvas.enabled = true;
+    }
+
+    public void Hide()
+    {
+        canvas.enabled = false;
     }
     
 }
