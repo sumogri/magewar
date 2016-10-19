@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 using System.Collections;
 
 public class CameraControler : MonoBehaviour
@@ -10,11 +11,15 @@ public class CameraControler : MonoBehaviour
     private Transform[] points;
     private int pointsState = 0;
     
+    public GameObject Target
+    {
+        set { target = value; }
+    }
 
     void Start()
     {
         offsets = new Vector3[points.Length];
-        target = GameObject.FindGameObjectWithTag("Cursor");
+        target = EventSystem.current.firstSelectedGameObject;
         for(int i = 0; i < points.Length; i++)
         {
             offsets[i] = points[i].position - target.transform.position;

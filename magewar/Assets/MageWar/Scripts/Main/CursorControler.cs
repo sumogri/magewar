@@ -13,7 +13,8 @@ public class CursorControler : MonoBehaviour {
 
     [SerializeField]
     private Material cursorMat;   //カーソルのマテリアル(デバッグ用)
-    private UnitControler unitControler;    //選択中のユニット
+    private UnitControler enterUnit;    //最後にカーソルに触れたユニット
+    private UnitControler chosingUnit;    //選択中のユニット
     private bool isChosing = false; //ユニットを移動選択中か
     private LinkedList<Vector3> movedPosList;
 
@@ -36,14 +37,10 @@ public class CursorControler : MonoBehaviour {
 
         if (Input.GetButtonDown("Cancel") && isChosing)
         {
-            foreach(Vector3 vec in movedPosList)
-            {
-                Debug.Log(vec);
-            }
             cursorMat.color = Color.red;
             moveableUI.Hide();
             isChosing = false;
-            unitControler.SetMove(movedPosList);
+            chosingUnit.SetMove(movedPosList);
         }
 
     }
@@ -52,7 +49,8 @@ public class CursorControler : MonoBehaviour {
     {
         if(other.tag == "Unit")
         {
-            unitState.SetState(other.GetComponent<UnitControler>());
+            enterUnit = other.GetComponent<UnitControler>();
+            unitState.SetState(enterUnit);
         }
     }
 
@@ -69,8 +67,8 @@ public class CursorControler : MonoBehaviour {
         if (Input.GetButtonDown("Submit") && !isChosing)
         {
             cursorMat.color = Color.blue;
-            unitControler = other.GetComponent<UnitControler>();
-            moveableUI.Activeate(gameObject.transform.position, unitControler.MovePower);
+            chosingUnit = enterUnit;
+            moveableUI.Activeate(gameObject.transform.position, chosingUnit.MovePower);
             isChosing = true;
         }
     }
@@ -114,6 +112,7 @@ public class CursorControler : MonoBehaviour {
     private void moveUpdate(float hor,float var)
     {
         Vector3 moveVec = Vector3.zero;
+        
         if (hor > 0.5)
         {
             moveVec = Vector3.right;
@@ -130,11 +129,11 @@ public class CursorControler : MonoBehaviour {
         {
             moveVec = Vector3.back;
         }
-        gameObject.transform.position += moveVec * speed;
-
+        
         #region カーソルの移動をユニットに伝えるための処理
         if (isChosing)
         {
+            //スレッドセーフにする
             if (movedPosList.Count != 0 && (moveVec * -1) == movedPosList.Last.Value)
             {
                 movedPosList.RemoveLast();
@@ -145,5 +144,8 @@ public class CursorControler : MonoBehaviour {
             }
         }
         #endregion
+
+        gameObject.transform.position += moveVec * speed;         //移動
+
     }
 }
