@@ -37,13 +37,13 @@ public class CameraControler : MonoBehaviour
         #endregion
 
         #region ズーム処理
-        if (GamepadManager.GetButtonDown(GamepadManager.KeyMean.ZoomIn))
+        if (Input.GetButtonDown("Zoomout"))
         {
             pointsState++;
             if (pointsState >= points.Length)
                 pointsState = 0;
         }
-        if (GamepadManager.GetButtonDown(GamepadManager.KeyMean.ZoomOut))
+        if (Input.GetButtonDown("Zoomin"))
         {
             pointsState--;
             if (pointsState < 0)
