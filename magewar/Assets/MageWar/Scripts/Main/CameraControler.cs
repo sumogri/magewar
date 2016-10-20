@@ -4,26 +4,24 @@ using System.Collections;
 
 public class CameraControler : MonoBehaviour
 {
-
     private GameObject target = null;
     private Vector3[] offsets;
+
     [SerializeField]
     private Transform[] points;
     private int pointsState = 0;
     
     public GameObject Target
     {
-        set { target = value; }
+        set {
+            if (target == null)
+                calcOffsets(value);
+            target = value;
+        }
     }
 
     void Start()
     {
-        offsets = new Vector3[points.Length];
-        target = EventSystem.current.firstSelectedGameObject;
-        for(int i = 0; i < points.Length; i++)
-        {
-            offsets[i] = points[i].position - target.transform.position;
-        }
     }
 
     void LateUpdate()
@@ -50,5 +48,14 @@ public class CameraControler : MonoBehaviour
                 pointsState = points.Length - 1;
         }
         #endregion
+    }
+
+    private void calcOffsets(GameObject T)
+    {
+        offsets = new Vector3[points.Length];
+        for (int i = 0; i < points.Length; i++)
+        {
+            offsets[i] = points[i].position - T.transform.position;
+        }
     }
 }
