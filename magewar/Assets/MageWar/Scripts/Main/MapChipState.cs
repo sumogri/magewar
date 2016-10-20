@@ -10,9 +10,10 @@ using System;
 public class MapChipState : MonoBehaviour, ISelectHandler
 {
     #region フィールド
+    [SerializeField]
     protected MapChipKind chipKind = MapChipKind.plane;
-    protected float hideRate = 10;
-    protected float diffence = 2;
+    protected float[] hideRates = { 10, 30 };
+    protected float[] diffences = { 2, 1 };
     private MapChipViewControler view;
     #endregion
 
@@ -22,11 +23,11 @@ public class MapChipState : MonoBehaviour, ISelectHandler
         get { return chipKind; }
     }
     public float HideRate {
-        get { return hideRate; }
+        get { return hideRates[(int)chipKind]; }
     }
     public float Diffence
     {
-        get { return diffence; }
+        get { return diffences[(int)chipKind]; }
     }
     public string ChipKindStr
     {
