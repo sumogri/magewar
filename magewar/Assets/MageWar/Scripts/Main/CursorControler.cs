@@ -38,7 +38,6 @@ public class CursorControler : MonoBehaviour, ISelectHandler, IDeselectHandler
         if(other.tag == "Unit")
         {
             chosingUnit = other.GetComponent<UnitControler>();
-            unitState.SetState(chosingUnit);
             isChoseable = true;
         }
     }
@@ -48,6 +47,10 @@ public class CursorControler : MonoBehaviour, ISelectHandler, IDeselectHandler
     #region by UI Controle
     void ISelectHandler.OnSelect(BaseEventData eventData)
     {
+        if (isChoseable)
+        {
+            unitState.SetState(chosingUnit);
+        }
         mainCameraControler.Target = gameObject;
     }
 

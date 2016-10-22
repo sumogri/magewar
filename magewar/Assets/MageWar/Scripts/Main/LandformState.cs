@@ -46,7 +46,7 @@ public class LandformState : MonoBehaviour, ISelectHandler
 
     void Start()
     {
-        view = GameObject.Find("MapChipView").GetComponent<LandformViewControler>();
+        view = GameObject.Find("LandformView").GetComponent<LandformViewControler>();
     }
 
     void ISelectHandler.OnSelect(BaseEventData eventData)

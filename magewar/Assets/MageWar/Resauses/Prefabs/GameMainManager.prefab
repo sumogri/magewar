@@ -2438,7 +2438,7 @@ GameObject:
   - 114: {fileID: 114000013390527482}
   - 114: {fileID: 114000014036661222}
   m_Layer: 0
-  m_Name: MapChipView
+  m_Name: LandformView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
