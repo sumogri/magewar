@@ -13,17 +13,16 @@ public class CursorControler : MonoBehaviour, ISelectHandler, IDeselectHandler
     private CameraControler mainCameraControler; //注目させるためのカメラ
 
     private Collider myCollider;
-    private UnitStateControler unitState;   //ユニット状態を表示するUIのコントローラ
-    private MoveAbleUI moveableUI;  //移動範囲UI
+    private UnitStateControler unitState;       //ユニット状態を表示するUIのコントローラ
+    private MoveAbleUI moveableUI;              //移動範囲UI
 
-    private UnitControler chosingUnit;    //選択候補のユニット
-    private bool isChoseable = false; //ユニットを選択可能か
+    private UnitControler chosingUnit;          //選択候補のユニット
+    private bool isChoseable = false;           //ユニットを選択可能か
     
 
     // Use this for initialization
     void Start () {
         myCollider = gameObject.GetComponent<Collider>();
-        myCollider.enabled = false;
         mainCameraControler = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraControler>();
         unitState = GameObject.Find("UnitState").GetComponent<UnitStateControler>();
     }
@@ -44,22 +43,16 @@ public class CursorControler : MonoBehaviour, ISelectHandler, IDeselectHandler
         }
     }
     
-    void OnTriggerStay(Collider other)
-    {
-
-    }
     #endregion
 
     #region by UI Controle
     void ISelectHandler.OnSelect(BaseEventData eventData)
     {
         mainCameraControler.Target = gameObject;
-        myCollider.enabled = true;
     }
 
     void IDeselectHandler.OnDeselect(BaseEventData eventData)
     {
-        myCollider.enabled = false;
         unitState.Hide();
     }
 

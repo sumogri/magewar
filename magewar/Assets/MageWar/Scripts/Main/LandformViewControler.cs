@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class MapChipViewControler : MonoBehaviour {
+public class LandformViewControler : MonoBehaviour {
     private Text[] texts;
     
 
@@ -16,7 +16,7 @@ public class MapChipViewControler : MonoBehaviour {
 	
 	}
 
-    public void SetState(MapChipState state)
+    public void SetState(LandformState state)
     {
         texts[0].text = state.ChipKindStr;
         texts[1].text = state.HideRate.ToString();

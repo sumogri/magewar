@@ -38,7 +38,7 @@ public class MapChipManager : MonoBehaviour
     /// <summary>
     /// マップチップ座標管理用 pair int
     /// </summary>
-    private class IVector2
+    public class IVector2
     {
         public int X;
         public int Y;

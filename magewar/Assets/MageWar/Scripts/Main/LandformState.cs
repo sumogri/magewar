@@ -7,14 +7,15 @@ using System;
 /// <summary>
 /// 地形情報
 /// </summary>
-public class MapChipState : MonoBehaviour, ISelectHandler
+public class LandformState : MonoBehaviour, ISelectHandler
 {
     #region フィールド
     [SerializeField]
-    protected MapChipKind chipKind = MapChipKind.plane;
-    protected float[] hideRates = { 10, 30 };
-    protected float[] diffences = { 2, 1 };
-    private MapChipViewControler view;
+    private MapChipKind chipKind = MapChipKind.plane;
+    private float[] hideRates = { 10, 30 };
+    private float[] diffences = { 2, 1 };
+    private int[] moveCosts = { 1, 2 };   //基本コスト
+    private LandformViewControler view;
     #endregion
 
     #region アクセサ
@@ -45,7 +46,7 @@ public class MapChipState : MonoBehaviour, ISelectHandler
 
     void Start()
     {
-        view = GameObject.Find("MapChipView").GetComponent<MapChipViewControler>();
+        view = GameObject.Find("MapChipView").GetComponent<LandformViewControler>();
     }
 
     void ISelectHandler.OnSelect(BaseEventData eventData)
