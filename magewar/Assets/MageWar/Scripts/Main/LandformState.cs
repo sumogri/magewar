@@ -34,6 +34,10 @@ public class LandformState : MonoBehaviour, ISelectHandler
     {
         get { return mapChipKindStr[(int)chipKind]; }
     }
+    public int MoveCost
+    {
+        get { return moveCosts[(int)chipKind]; }
+    }
     #endregion
 
     #region マップチップの種類

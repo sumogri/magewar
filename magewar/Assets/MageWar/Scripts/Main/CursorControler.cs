@@ -18,13 +18,14 @@ public class CursorControler : MonoBehaviour, ISelectHandler, IDeselectHandler
 
     private UnitControler chosingUnit;          //選択候補のユニット
     private bool isChoseable = false;           //ユニットを選択可能か
-    
+    private MapChipControler controler;
 
     // Use this for initialization
     void Start () {
         myCollider = gameObject.GetComponent<Collider>();
         mainCameraControler = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraControler>();
         unitState = GameObject.Find("UnitState").GetComponent<UnitStateControler>();
+        controler = gameObject.GetComponent<MapChipControler>();
     }
 	
 	// Update is called once per frame
@@ -38,7 +39,6 @@ public class CursorControler : MonoBehaviour, ISelectHandler, IDeselectHandler
         if(other.tag == "Unit")
         {
             chosingUnit = other.GetComponent<UnitControler>();
-            unitState.SetState(chosingUnit);
             isChoseable = true;
         }
     }
@@ -49,6 +49,8 @@ public class CursorControler : MonoBehaviour, ISelectHandler, IDeselectHandler
     void ISelectHandler.OnSelect(BaseEventData eventData)
     {
         mainCameraControler.Target = gameObject;
+        if(isChoseable)
+            unitState.SetState(chosingUnit);
     }
 
     void IDeselectHandler.OnDeselect(BaseEventData eventData)
@@ -60,6 +62,7 @@ public class CursorControler : MonoBehaviour, ISelectHandler, IDeselectHandler
     {
         if (isChoseable)
         {
+            controler.Manager.SerchMoveable(chosingUnit,controler.CelPosition);
             Debug.Log("Chose");
         }
     }
