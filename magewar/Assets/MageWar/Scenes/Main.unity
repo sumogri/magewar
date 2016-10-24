@@ -3104,6 +3104,10 @@ Prefab:
       propertyPath: chipKind
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1000012687535064, guid: dab5d565ef80431418ed99e400a43262, type: 2}
+      propertyPath: m_Name
+      value: LandformView
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: dab5d565ef80431418ed99e400a43262, type: 2}
   m_IsPrefabParent: 0
