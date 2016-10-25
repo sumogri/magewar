@@ -1,59 +1,66 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
+using System;
 
-public class CursorControler : MonoBehaviour {
-    private float speed = 2f;
-    private float cursorMoveableTime = 0.1f;
-    private float asixInputingTime;
-    private bool inputable = true;
+/// <summary>
+/// マップチップのカーソルとしてのふるまい
+/// </summary>
+public class CursorControler : MonoBehaviour, ISelectHandler, IDeselectHandler,ISubmitHandler,ICancelHandler
+{
+    private CameraControler mainCameraControler; //注目させるためのカメラ
 
-	// Use this for initialization
-	void Start () {
-	
-	}
+    private UnitStateControler unitState;       //ユニット状態を表示するUIのコントローラ
+    private MoveAbleUI moveableUI;              //移動範囲UI
+    
+    private MapChipControler controler;
+
+    // Use this for initialization
+    void Start () {
+        mainCameraControler = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraControler>();
+        unitState = GameObject.Find("UnitState").GetComponent<UnitStateControler>();
+        controler = gameObject.GetComponent<MapChipControler>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
-        float hor = Input.GetAxis("Horizontal");
-        float var = Input.GetAxis("Vertical");
-        //Debug.Log("hor" + hor + "var" + var);
-
-        #region 一定時間おきに入力をとる
-        if (hor != 0f || var != 0f)
-        {
-            asixInputingTime += Time.deltaTime;
-            if(asixInputingTime >= cursorMoveableTime)
-            {
-                inputable = true;
-                asixInputingTime = 0;
-            }
-        }
-        else
-        {
-            asixInputingTime = 0;
-            inputable = true;
-        }
-        #endregion
-
-        if (inputable)
-        {
-            inputable = false;
-            if (hor > 0.5)
-            {
-                gameObject.transform.position += Vector3.right * speed;
-            }
-            else if (hor < -0.5)
-            {
-                gameObject.transform.position += Vector3.left * speed;
-            }
-            if (var > 0.5)
-            {
-                gameObject.transform.position += Vector3.forward * speed;
-            }
-            else if (var < -0.5)
-            {
-                gameObject.transform.position += Vector3.back * speed;
-            }
-        }
+        
     }
+
+ 
+    #region by UI Controle
+    void ISelectHandler.OnSelect(BaseEventData eventData)
+    {
+        mainCameraControler.Target = gameObject;
+        if(controler.OnUnit != null)
+            unitState.SetState(controler.OnUnit);
+    }
+
+    void IDeselectHandler.OnDeselect(BaseEventData eventData)
+    {
+        unitState.Hide();
+    }
+
+    void ISubmitHandler.OnSubmit(BaseEventData eventData)
+    {
+        if (controler.IsMoveable)
+        {
+            controler.Manager.ChoseUnit.SetMove(gameObject.transform.position+Vector3.forward+Vector3.right);
+            controler.Manager.MoveableOff();
+        }
+        else if (controler.OnUnit != null)
+        {
+            controler.Manager.SerchMoveable(controler.OnUnit,controler.CelPosition);
+            controler.ChoseUnit();
+        }
+        
+    }
+
+    void ICancelHandler.OnCancel(BaseEventData eventData)
+    {
+        controler.Manager.MoveableOff();
+    }
+    #endregion
 }
