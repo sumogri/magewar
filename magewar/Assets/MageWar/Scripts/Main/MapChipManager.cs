@@ -67,7 +67,11 @@ public class MapChipManager : MonoBehaviour
             IVector2 nowpos = posque.Dequeue();
             int index = Toint(nowpos);
             int movePow = chips[index].RemainingMove;
-            for(int i = 0; i < 4; i++)
+
+            //移動可能チップリストの更新
+            moveable.Add(chips[index]);
+
+            for (int i = 0; i < 4; i++)
             {
                 IVector2 newpos = nowpos.Step(i);
                 //枠内であるか
@@ -82,7 +86,6 @@ public class MapChipManager : MonoBehaviour
                         chips[index].IsMoveable = true;
                         chips[index].RemainingMove = remain;
                         posque.Enqueue(newpos);
-                        moveable.Add(chips[index]);
                     }
                 }
             }
