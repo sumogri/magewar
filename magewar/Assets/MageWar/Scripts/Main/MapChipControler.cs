@@ -11,7 +11,7 @@ public class MapChipControler : MonoBehaviour, ISelectHandler
 {
 
     #region フィールド
-    private GameObject onUnit = null;  //チップ上のユニット
+    private UnitControler onUnit = null;  //チップ上のユニット
     private MapChipManager.IVector2 celpos; //セル上の場所
     private LandformState landform;
     private bool isMoveable = false;
@@ -22,7 +22,7 @@ public class MapChipControler : MonoBehaviour, ISelectHandler
     #endregion
 
     #region アクセサ
-    public GameObject OnUnit
+    public UnitControler OnUnit
     {
         get { return onUnit; }
     }
@@ -67,12 +67,17 @@ public class MapChipControler : MonoBehaviour, ISelectHandler
     void Update () {
 	}
 
+    public void ChoseUnit()
+    {
+        manager.ChoseUnit = onUnit.GetComponent<UnitControler>();
+    }
+
     #region colliderのイベントハンドラ
     void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Unit")
         {
-            onUnit = other.gameObject;
+            onUnit = other.GetComponent<UnitControler>();
         }
     }
 

@@ -8,21 +8,17 @@ using System;
 /// <summary>
 /// マップチップのカーソルとしてのふるまい
 /// </summary>
-public class CursorControler : MonoBehaviour, ISelectHandler, IDeselectHandler,ISubmitHandler
+public class CursorControler : MonoBehaviour, ISelectHandler, IDeselectHandler,ISubmitHandler,ICancelHandler
 {
     private CameraControler mainCameraControler; //注目させるためのカメラ
 
-    private Collider myCollider;
     private UnitStateControler unitState;       //ユニット状態を表示するUIのコントローラ
     private MoveAbleUI moveableUI;              //移動範囲UI
-
-    private UnitControler chosingUnit;          //選択候補のユニット
-    private bool isChoseable = false;           //ユニットを選択可能か
+    
     private MapChipControler controler;
 
     // Use this for initialization
     void Start () {
-        myCollider = gameObject.GetComponent<Collider>();
         mainCameraControler = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraControler>();
         unitState = GameObject.Find("UnitState").GetComponent<UnitStateControler>();
         controler = gameObject.GetComponent<MapChipControler>();
@@ -33,28 +29,13 @@ public class CursorControler : MonoBehaviour, ISelectHandler, IDeselectHandler,I
         
     }
 
-    #region by Collider Controle
-    void OnTriggerEnter(Collider other)
-    {
-        if(other.tag == "Unit")
-        {
-            chosingUnit = other.GetComponent<UnitControler>();
-            isChoseable = true;
-        }
-    }
-    
-    #endregion
-
+ 
     #region by UI Controle
     void ISelectHandler.OnSelect(BaseEventData eventData)
     {
-        if (isChoseable)
-        {
-            unitState.SetState(chosingUnit);
-        }
         mainCameraControler.Target = gameObject;
-        if(isChoseable)
-            unitState.SetState(chosingUnit);
+        if(controler.OnUnit != null)
+            unitState.SetState(controler.OnUnit);
     }
 
     void IDeselectHandler.OnDeselect(BaseEventData eventData)
@@ -64,11 +45,22 @@ public class CursorControler : MonoBehaviour, ISelectHandler, IDeselectHandler,I
 
     void ISubmitHandler.OnSubmit(BaseEventData eventData)
     {
-        if (isChoseable)
+        if (controler.IsMoveable)
         {
-            controler.Manager.SerchMoveable(chosingUnit,controler.CelPosition);
-            Debug.Log("Chose");
+            controler.Manager.ChoseUnit.SetMove(gameObject.transform.position+Vector3.forward+Vector3.right);
+            controler.Manager.MoveableOff();
         }
+        else if (controler.OnUnit != null)
+        {
+            controler.Manager.SerchMoveable(controler.OnUnit,controler.CelPosition);
+            controler.ChoseUnit();
+        }
+        
+    }
+
+    void ICancelHandler.OnCancel(BaseEventData eventData)
+    {
+        controler.Manager.MoveableOff();
     }
     #endregion
 }

@@ -16,6 +16,7 @@ public class UnitControler : MonoBehaviour {
     private float moveStartTime; //移動先セットされた時間
     private Vector3 startPos;
     private Vector3 endPos;
+    private NavMeshAgent agent;
 
     #region プロパティ
     public string UnitName
@@ -38,7 +39,7 @@ public class UnitControler : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-
+        agent = gameObject.GetComponent<NavMeshAgent>();
     }
 	
 	// Update is called once per frame
@@ -66,16 +67,8 @@ public class UnitControler : MonoBehaviour {
         }
 	}
     
-    public void SetMove(LinkedList<Vector3> value)
+    public void SetMove(Vector3 to)
     {
-        startPos = gameObject.transform.position;
-        if (value.Count > 0)
-        {
-            endPos = startPos + value.First.Value* 2f;
-            value.RemoveFirst();
-        }
-        moveStartTime = Time.timeSinceLevelLoad;
-        moveToAngles = value;
-        isMoveing = true;
+        agent.SetDestination(to);
     }
 }

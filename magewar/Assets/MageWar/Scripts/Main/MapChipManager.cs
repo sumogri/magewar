@@ -13,6 +13,14 @@ public class MapChipManager : MonoBehaviour
 
     private List<MapChipControler> chips = new List<MapChipControler>();
     private List<MapChipControler> moveable = new List<MapChipControler>();
+    private UnitControler choseUnit;
+
+    //カーソルが選択中のユニット
+    public UnitControler ChoseUnit
+    {
+        get { return choseUnit; }
+        set { choseUnit = value; }
+    }
 
     // Use this for initialization
     void Start () {
@@ -34,15 +42,16 @@ public class MapChipManager : MonoBehaviour
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetButtonDown("Cancel"))
-        {
-            foreach(MapChipControler chip in moveable)
-            {
-                chip.IsMoveable = false;
-            }
-            moveable.Clear();
-        }
 	}
+
+    public void MoveableOff()
+    {
+        foreach (MapChipControler chip in moveable)
+        {
+            chip.IsMoveable = false;
+        }
+        moveable.Clear();
+    }
 
 
     #region 自動化用メソッド
@@ -97,11 +106,7 @@ public class MapChipManager : MonoBehaviour
     {
         return vec.X + vec.Y * mapCelSize.X;
     }
-
-    void OnCancel(BaseEventData eventData)
-    {
-        Debug.Log("CAnsel");
-    }
+   
 
     /// <summary>
     /// マップチップ座標管理用 pair int
