@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// キー入力と、操作とを結びつけるクラス
+/// InputManagerでできないことをこっちでやる
+/// </summary>
 public class GamepadManager : SingletonMonoBehaviour<GamepadManager> {
 
     public enum KeyMean {ZoomIn,ZoomOut,UD,LR};
