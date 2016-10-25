@@ -2,6 +2,7 @@
 using UnityEngine.EventSystems;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class MapChipManager : MonoBehaviour
 {
@@ -11,9 +12,10 @@ public class MapChipManager : MonoBehaviour
     private IVector2 mapCelSize = new IVector2(10,10);  //マップチップの最大配置数
 
     private List<MapChipControler> chips = new List<MapChipControler>();
-    
-	// Use this for initialization
-	void Start () {
+    private List<MapChipControler> moveable = new List<MapChipControler>();
+
+    // Use this for initialization
+    void Start () {
 
         //子オブジェクトを取得しておく
         int x=0, y=0;
@@ -32,6 +34,14 @@ public class MapChipManager : MonoBehaviour
 	
 	// Update is called once per frame
 	void Update () {
+        if (Input.GetButtonDown("Cancel"))
+        {
+            foreach(MapChipControler chip in moveable)
+            {
+                chip.IsMoveable = false;
+            }
+            moveable.Clear();
+        }
 	}
 
 
@@ -72,6 +82,7 @@ public class MapChipManager : MonoBehaviour
                         chips[index].IsMoveable = true;
                         chips[index].RemainingMove = remain;
                         posque.Enqueue(newpos);
+                        moveable.Add(chips[index]);
                     }
                 }
             }
@@ -82,6 +93,11 @@ public class MapChipManager : MonoBehaviour
     private int Toint(IVector2 vec)
     {
         return vec.X + vec.Y * mapCelSize.X;
+    }
+
+    void OnCancel(BaseEventData eventData)
+    {
+        Debug.Log("CAnsel");
     }
 
     /// <summary>

@@ -7,7 +7,7 @@ using System;
 /// <summary>
 /// マップチップ1マスあたりの管理
 /// </summary>
-public class MapChipControler : MonoBehaviour,ISelectHandler
+public class MapChipControler : MonoBehaviour, ISelectHandler
 {
 
     #region フィールド
@@ -39,7 +39,7 @@ public class MapChipControler : MonoBehaviour,ISelectHandler
     {
         get { return isMoveable; }
         set { isMoveable = value;
-            moveableImage.enabled = true; ;
+            moveableImage.enabled = value; ;
         }
     }
     public int RemainingMove
@@ -88,5 +88,6 @@ public class MapChipControler : MonoBehaviour,ISelectHandler
     {
         Debug.Log(celpos.X.ToString() + celpos.Y.ToString());
     }
+
     #endregion
 }

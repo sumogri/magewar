@@ -8,7 +8,7 @@ using System;
 /// <summary>
 /// マップチップのカーソルとしてのふるまい
 /// </summary>
-public class CursorControler : MonoBehaviour, ISelectHandler, IDeselectHandler
+public class CursorControler : MonoBehaviour, ISelectHandler, IDeselectHandler,ISubmitHandler
 {
     private CameraControler mainCameraControler; //注目させるためのカメラ
 
@@ -62,7 +62,7 @@ public class CursorControler : MonoBehaviour, ISelectHandler, IDeselectHandler
         unitState.Hide();
     }
 
-    public void OnClickSubmit()
+    void ISubmitHandler.OnSubmit(BaseEventData eventData)
     {
         if (isChoseable)
         {
