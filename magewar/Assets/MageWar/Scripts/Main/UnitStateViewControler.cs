@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class UnitStateControler : MonoBehaviour {
+public class UnitStateViewControler : MonoBehaviour {
     private Text[] texts;
     private Image[] images;
     private Canvas canvas;
@@ -28,6 +28,10 @@ public class UnitStateControler : MonoBehaviour {
     public void SetState(UnitControler unit)
     {
         canvas.enabled = true;
+        foreach(Image image in images)
+            image.enabled = false;
+
+        images[(int)unit.Region].enabled = true; 
         texts[0].text = unit.UnitName;
         texts[1].text = unit.HP.ToString();
         texts[2].text = unit.Job;

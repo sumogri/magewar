@@ -12,7 +12,7 @@ public class CursorControler : MonoBehaviour, ISelectHandler, IDeselectHandler,I
 {
     private CameraControler mainCameraControler; //注目させるためのカメラ
 
-    private UnitStateControler unitState;       //ユニット状態を表示するUIのコントローラ
+    private UnitStateViewControler unitState;       //ユニット状態を表示するUIのコントローラ
     private MoveAbleUI moveableUI;              //移動範囲UI
     
     private MapChipControler controler;
@@ -20,7 +20,7 @@ public class CursorControler : MonoBehaviour, ISelectHandler, IDeselectHandler,I
     // Use this for initialization
     void Start () {
         mainCameraControler = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraControler>();
-        unitState = GameObject.Find("UnitState").GetComponent<UnitStateControler>();
+        unitState = GameObject.Find("UnitStateView").GetComponent<UnitStateViewControler>();
         controler = gameObject.GetComponent<MapChipControler>();
     }
 	
@@ -30,7 +30,7 @@ public class CursorControler : MonoBehaviour, ISelectHandler, IDeselectHandler,I
     }
 
  
-    #region by UI Controle
+    #region eventHandlers
     void ISelectHandler.OnSelect(BaseEventData eventData)
     {
         mainCameraControler.Target = gameObject;
