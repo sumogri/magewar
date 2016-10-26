@@ -87,6 +87,10 @@ public class MapChipManager : MonoBehaviour
                 if (newpos.X < mapCelSize.X && newpos.X >= 0 && newpos.Y < mapCelSize.Y && newpos.Y >= 0)
                 {
                     index = Toint(newpos);
+                    if (chips[index].OnUnit != null && 
+                        chips[index].OnUnit.Region == UnitManager.UnitRegion.enemy)
+                        continue;
+
                     int remain = movePow - chips[index].Landform.MoveCost;
                     //行ったことなくて、いける or 行ったことあって、もっとパワー残していける
                     if (!chips[index].IsMoveable &&  remain >= 0 ||

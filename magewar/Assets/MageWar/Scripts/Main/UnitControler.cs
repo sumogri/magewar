@@ -12,7 +12,8 @@ public abstract class UnitControler : MonoBehaviour {
     #endregion
     
     protected NavMeshAgent agent;
-
+    protected NavMeshObstacle obstacle;
+    private Vector3 endPosition;
     #region プロパティ
     public string UnitName
     {
@@ -39,15 +40,29 @@ public abstract class UnitControler : MonoBehaviour {
     // Use this for initialization
     public virtual void Start () {
         agent = gameObject.GetComponent<NavMeshAgent>();
+        agent.enabled = false;
+        obstacle = gameObject.GetComponent<NavMeshObstacle>();
     }
 	
 	// Update is called once per frame
-	void Update () {
+	public virtual void Update() {
 
-	}
+        //agentの移動完了を検知
+        if(agent.enabled && !agent.pathPending && agent.remainingDistance < 0.001)
+        {
+            agent.enabled = false;
+            obstacle.enabled = true;
+        }
+    }
     
     public void SetMove(Vector3 to)
     {
+        endPosition = to;
+        if (region != UnitManager.UnitRegion.mine)
+            return;
+
+        obstacle.enabled = false;
+        agent.enabled = true;
         agent.SetDestination(to);
-    }
+    }   
 }
