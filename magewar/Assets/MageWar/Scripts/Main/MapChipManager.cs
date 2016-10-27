@@ -53,6 +53,11 @@ public class MapChipManager : MonoBehaviour
         moveable.Clear();
     }
 
+    public void SetIntaractive(bool val)
+    {
+        foreach (MapChipControler chip in chips)
+            chip.MySelectable.interactable = val;
+    }
 
     #region 自動化用メソッド
     /*

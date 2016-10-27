@@ -48,7 +48,9 @@ public class CursorControler : MonoBehaviour, ISelectHandler, IDeselectHandler,I
         if (controler.IsMoveable)
         {
             controler.Manager.ChoseUnit.SetMove(gameObject.transform.position+Vector3.forward+Vector3.right);
+            mainCameraControler.Target = controler.Manager.ChoseUnit.gameObject;
             controler.Manager.MoveableOff();
+            EventSystem.current.SetSelectedGameObject(null);
         }
         else if (controler.OnUnit != null)
         {

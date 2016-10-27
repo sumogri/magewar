@@ -21,6 +21,7 @@ public class MapChipControler : MonoBehaviour, ISelectHandler
     private MapChipManager manager;
     private Image moveableImage;
     private Image atkableImage;
+    private Selectable mySelectable;
     #endregion
 
     #region アクセサ
@@ -53,6 +54,10 @@ public class MapChipControler : MonoBehaviour, ISelectHandler
     {
         get { return manager; }
     }
+    public Selectable MySelectable
+    {
+        get { return mySelectable; }
+    }
     #endregion
 
     // Use this for initialization
@@ -64,6 +69,7 @@ public class MapChipControler : MonoBehaviour, ISelectHandler
         moveableImage.enabled = false;
         atkableImage = gameObject.transform.FindChild("atkable").GetComponent<Image>();
         atkableImage.enabled = false;
+        mySelectable = gameObject.GetComponent<Selectable>();
     }
 
     // Update is called once per frame
@@ -82,7 +88,7 @@ public class MapChipControler : MonoBehaviour, ISelectHandler
         {
             UnitControler onUnit = other.GetComponent<UnitControler>();
             onUnits.Add(onUnit);
-            Debug.Log("Enter" + celpos.X.ToString() + ":" + celpos.Y.ToString());
+            //Debug.Log("Enter" + celpos.X.ToString() + ":" + celpos.Y.ToString());
         }
     }
 
@@ -92,7 +98,7 @@ public class MapChipControler : MonoBehaviour, ISelectHandler
         {
             UnitControler unit = other.GetComponent<UnitControler>();
             onUnits.Remove(unit);
-            Debug.Log("Exit" + celpos.X.ToString() + ":" + celpos.Y.ToString());
+            //Debug.Log("Exit" + celpos.X.ToString() + ":" + celpos.Y.ToString());
         }
     }
 
