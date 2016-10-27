@@ -14,6 +14,8 @@ public abstract class UnitControler : MonoBehaviour {
     protected NavMeshAgent agent;
     protected NavMeshObstacle obstacle;
     private Vector3 endPosition;
+    private Collider mycollider;
+
     #region プロパティ
     public string UnitName
     {
@@ -42,8 +44,10 @@ public abstract class UnitControler : MonoBehaviour {
         agent = gameObject.GetComponent<NavMeshAgent>();
         agent.enabled = false;
         obstacle = gameObject.GetComponent<NavMeshObstacle>();
+        obstacle.enabled = true;
+        mycollider = gameObject.GetComponent<Collider>();
     }
-	
+
 	// Update is called once per frame
 	public virtual void Update() {
 
@@ -54,13 +58,12 @@ public abstract class UnitControler : MonoBehaviour {
             obstacle.enabled = true;
         }
     }
-    
+
     public void SetMove(Vector3 to)
     {
         endPosition = to;
         if (region != UnitManager.UnitRegion.mine)
             return;
-
         obstacle.enabled = false;
         agent.enabled = true;
         agent.SetDestination(to);

@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
+using System.Collections.Generic;
 using System;
 
 /// <summary>
@@ -11,8 +12,9 @@ public class MapChipControler : MonoBehaviour, ISelectHandler
 {
 
     #region フィールド
-    private UnitControler onUnit = null;  //チップ上のユニット
+    private List<UnitControler> onUnits = new List<UnitControler>(); //チップ上のユニット
     private MapChipManager.IVector2 celpos; //セル上の場所
+    private Collider mycollider;
     private LandformState landform;
     private bool isMoveable = false;
     private int remainingMove = 0;  //残り移動量
@@ -24,7 +26,7 @@ public class MapChipControler : MonoBehaviour, ISelectHandler
     #region アクセサ
     public UnitControler OnUnit
     {
-        get { return onUnit; }
+        get { return (onUnits.Count == 0) ? null : onUnits[0]; }
     }
     public MapChipManager.IVector2 CelPosition
     {
@@ -55,6 +57,7 @@ public class MapChipControler : MonoBehaviour, ISelectHandler
 
     // Use this for initialization
     void Start () {
+        mycollider = gameObject.GetComponent<Collider>();
         landform = gameObject.GetComponent<LandformState>();
         manager = transform.parent.gameObject.GetComponent<MapChipManager>();
         moveableImage = gameObject.transform.FindChild("moveable").GetComponent<Image>();
@@ -69,7 +72,7 @@ public class MapChipControler : MonoBehaviour, ISelectHandler
 
     public void ChoseUnit()
     {
-        manager.ChoseUnit = onUnit.GetComponent<UnitControler>();
+        manager.ChoseUnit = onUnits[0];
     }
 
     #region colliderのイベントハンドラ
@@ -77,7 +80,9 @@ public class MapChipControler : MonoBehaviour, ISelectHandler
     {
         if (other.tag == "Unit")
         {
-            onUnit = other.GetComponent<UnitControler>();
+            UnitControler onUnit = other.GetComponent<UnitControler>();
+            onUnits.Add(onUnit);
+            Debug.Log("Enter" + celpos.X.ToString() + ":" + celpos.Y.ToString());
         }
     }
 
@@ -85,7 +90,9 @@ public class MapChipControler : MonoBehaviour, ISelectHandler
     {
         if (other.tag == "Unit")
         {
-            onUnit = null;
+            UnitControler unit = other.GetComponent<UnitControler>();
+            onUnits.Remove(unit);
+            Debug.Log("Exit" + celpos.X.ToString() + ":" + celpos.Y.ToString());
         }
     }
 

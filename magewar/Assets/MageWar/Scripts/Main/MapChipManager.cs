@@ -87,16 +87,20 @@ public class MapChipManager : MonoBehaviour
                 if (newpos.X < mapCelSize.X && newpos.X >= 0 && newpos.Y < mapCelSize.Y && newpos.Y >= 0)
                 {
                     index = Toint(newpos);
-                    if (chips[index].OnUnit != null && 
-                        chips[index].OnUnit.Region == UnitManager.UnitRegion.enemy)
-                        continue;
-
+                    
                     int remain = movePow - chips[index].Landform.MoveCost;
                     //行ったことなくて、いける or 行ったことあって、もっとパワー残していける
                     if (!chips[index].IsMoveable &&  remain >= 0 ||
                         chips[index].IsMoveable && chips[index].RemainingMove < remain)
                     {
-                        chips[index].IsMoveable = true;
+                        //候補のマスに敵がいるなら、パス
+                        if (chips[index].OnUnit != null && chips[index].OnUnit.Region == UnitManager.UnitRegion.enemy)
+                            continue;
+
+                        //候補のマスに敵以外のユニットがいない場合,そこには行けない(通過はできる)
+                        if (chips[index].OnUnit == null)
+                            chips[index].IsMoveable = true;
+
                         chips[index].RemainingMove = remain;
                         posque.Enqueue(newpos);
                     }
