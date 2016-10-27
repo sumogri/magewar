@@ -14,6 +14,7 @@ public abstract class UnitControler : MonoBehaviour {
     protected NavMeshAgent agent;
     protected NavMeshObstacle obstacle;
     protected UnitManager manager;
+    protected bool isMoved = false;
 
     #region プロパティ
     public string UnitName
@@ -36,6 +37,11 @@ public abstract class UnitControler : MonoBehaviour {
     {
         get { return region; }
     }
+    public bool IsMoved {
+        get { return isMoved; }
+        set { isMoved = value; }
+    }
+
     #endregion
 
     // Use this for initialization
@@ -66,5 +72,13 @@ public abstract class UnitControler : MonoBehaviour {
         obstacle.enabled = false;
         agent.enabled = true;
         agent.SetDestination(to);
-    }   
+        manager.UiManager.MapChipMan.MoveableViewEnable(false);
+    }
+
+    //移動後,待機が選択されたときに行う
+    public void Wait()
+    {
+        isMoved = true;
+        Debug.Log(unitName + "is wait");
+    }
 }

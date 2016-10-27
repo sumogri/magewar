@@ -13,13 +13,19 @@ public class MapChipManager : MonoBehaviour
 
     private List<MapChipControler> chips = new List<MapChipControler>();
     private List<MapChipControler> moveable = new List<MapChipControler>();
-    private UnitControler choseUnit;
+    private UnitControler choseUnit;    //選択中のユニット(選択:ユニットの乗ったマップチップを選択してSubmit)
+    private MapChipControler choseChip; //選択中のユニットのいるチップ
 
     //カーソルが選択中のユニット
     public UnitControler ChoseUnit
     {
         get { return choseUnit; }
         set { choseUnit = value; }
+    }
+    public MapChipControler ChoseChip
+    {
+        get { return choseChip; }
+        set { choseChip = value; }
     }
 
     // Use this for initialization
@@ -44,19 +50,39 @@ public class MapChipManager : MonoBehaviour
 	void Update () {
 	}
 
+    //表示と選択状態の解除
     public void MoveableOff()
     {
         foreach (MapChipControler chip in moveable)
         {
             chip.IsMoveable = false;
         }
+        MoveableViewEnable(false);
         moveable.Clear();
+        choseUnit = null;
+        choseChip = null;
     }
 
     public void SetIntaractive(bool val)
     {
         foreach (MapChipControler chip in chips)
             chip.MySelectable.interactable = val;
+    }
+
+    //表示のみのアクティブ化
+    public void MoveableViewEnable(bool val)
+    {
+        foreach (MapChipControler chip in moveable)
+            chip.MovalView.enabled = val;
+    }
+
+    //移動をキャンセルして、表示を戻す
+    public void MoveCancel()
+    {
+        choseUnit.gameObject.transform.position = choseChip.transform.position + Vector3.forward + Vector3.right;
+        SetIntaractive(true);
+        EventSystem.current.SetSelectedGameObject(choseChip.gameObject);
+        MoveableViewEnable(true);
     }
 
     #region 自動化用メソッド
@@ -73,6 +99,7 @@ public class MapChipManager : MonoBehaviour
     {
         Queue<IVector2> posque = new Queue<IVector2>();
         posque.Enqueue(pos);
+        moveable.Add(chips[Toint(pos)]);
         chips[Toint(pos)].IsMoveable = true;
         chips[Toint(pos)].RemainingMove = unit.MovePower;
 
@@ -82,8 +109,6 @@ public class MapChipManager : MonoBehaviour
             int index = Toint(nowpos);
             int movePow = chips[index].RemainingMove;
 
-            //移動可能チップリストの更新
-            moveable.Add(chips[index]);
 
             for (int i = 0; i < 4; i++)
             {
@@ -95,16 +120,20 @@ public class MapChipManager : MonoBehaviour
                     
                     int remain = movePow - chips[index].Landform.MoveCost;
                     //行ったことなくて、いける or 行ったことあって、もっとパワー残していける
-                    if (!chips[index].IsMoveable &&  remain >= 0 ||
+                    if (!chips[index].IsMoveable && remain >= 0 ||
                         chips[index].IsMoveable && chips[index].RemainingMove < remain)
                     {
                         //候補のマスに敵がいるなら、パス
                         if (chips[index].OnUnit != null && chips[index].OnUnit.Region == UnitManager.UnitRegion.enemy)
                             continue;
 
-                        //候補のマスに敵以外のユニットがいない場合,そこには行けない(通過はできる)
+                        //候補のマスにユニットがいない場合,そこには行ける
                         if (chips[index].OnUnit == null)
+                        {
                             chips[index].IsMoveable = true;
+                            //移動可能チップリストの更新
+                            moveable.Add(chips[index]);
+                        }
 
                         chips[index].RemainingMove = remain;
                         posque.Enqueue(newpos);

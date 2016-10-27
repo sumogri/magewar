@@ -41,9 +41,11 @@ public class MapChipControler : MonoBehaviour, ISelectHandler
     public bool IsMoveable
     {
         get { return isMoveable; }
-        set { isMoveable = value;
-            moveableImage.enabled = value; ;
-        }
+        set { isMoveable = value;}
+    }
+    public Image MovalView
+    {
+        get { return moveableImage; }
     }
     public int RemainingMove
     {
@@ -79,6 +81,10 @@ public class MapChipControler : MonoBehaviour, ISelectHandler
     public void ChoseUnit()
     {
         manager.ChoseUnit = onUnits[0];
+    }
+    public void ChoseChip()
+    {
+        manager.ChoseChip = this; 
     }
 
     #region colliderのイベントハンドラ
