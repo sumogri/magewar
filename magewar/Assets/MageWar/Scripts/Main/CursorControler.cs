@@ -45,21 +45,32 @@ public class CursorControler : MonoBehaviour, ISelectHandler, IDeselectHandler,I
 
     void ISubmitHandler.OnSubmit(BaseEventData eventData)
     {
-        //移動可能マスであった場合
-        if (controler.IsMoveable)
+        //ユニットの乗ってない移動不可マスでは,何も起きない
+        if(controler.OnUnit == null && !controler.IsMoveable)
+            return;
+        
+        //移動可能マスであり,移動選択ユニットが味方だった場合
+        if (controler.IsMoveable &&
+            controler.Manager.ChoseUnit.Region == UnitManager.UnitRegion.mine)
         {
+            //移動先を決定,移動
             controler.Manager.ChoseUnit.SetMove(gameObject.transform.position+Vector3.forward+Vector3.right);
             mainCameraControler.Target = controler.Manager.ChoseUnit.gameObject;
             controler.Manager.MoveableViewEnable(false);
+            controler.SetIMoveToChip();
             EventSystem.current.SetSelectedGameObject(null);
         }
-        //上にユニットが乗ってて、行動済みでない場合
+        //乗ってるユニットが行動済みでない場合
         else if (controler.OnUnit != null && !controler.OnUnit.IsMoved)
         {
+            //現在の移動選択状態を解除
+            controler.Manager.MoveableOff();
+
+            //移動先を表示する
             controler.Manager.SerchMoveable(controler.OnUnit,controler.CelPosition);
             controler.Manager.MoveableViewEnable(true);
-            controler.ChoseUnit();
-            controler.ChoseChip();
+            controler.SetIChoseUnit();
+            controler.SetIChoseChip();
         }
 
     }

@@ -15,6 +15,7 @@ public class MapChipManager : MonoBehaviour
     private List<MapChipControler> moveable = new List<MapChipControler>();
     private UnitControler choseUnit;    //選択中のユニット(選択:ユニットの乗ったマップチップを選択してSubmit)
     private MapChipControler choseChip; //選択中のユニットのいるチップ
+    private MapChipControler moveToChip;//選択したユニットの移動先チップ
 
     //カーソルが選択中のユニット
     public UnitControler ChoseUnit
@@ -26,6 +27,11 @@ public class MapChipManager : MonoBehaviour
     {
         get { return choseChip; }
         set { choseChip = value; }
+    }
+    public MapChipControler MoveToChip
+    {
+        get { return moveToChip; }
+        set { moveToChip = value; }
     }
 
     // Use this for initialization
@@ -50,7 +56,7 @@ public class MapChipManager : MonoBehaviour
 	void Update () {
 	}
 
-    //表示と選択状態の解除
+    //表示と移動可能状態の解除
     public void MoveableOff()
     {
         foreach (MapChipControler chip in moveable)
@@ -61,6 +67,7 @@ public class MapChipManager : MonoBehaviour
         moveable.Clear();
         choseUnit = null;
         choseChip = null;
+        moveToChip = null;
     }
 
     public void SetIntaractive(bool val)

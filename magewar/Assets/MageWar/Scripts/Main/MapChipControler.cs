@@ -78,13 +78,17 @@ public class MapChipControler : MonoBehaviour, ISelectHandler
     void Update () {
 	}
 
-    public void ChoseUnit()
+    public void SetIChoseUnit()
     {
         manager.ChoseUnit = onUnits[0];
     }
-    public void ChoseChip()
+    public void SetIChoseChip()
     {
         manager.ChoseChip = this; 
+    }
+    public void SetIMoveToChip()
+    {
+        manager.MoveToChip = this;
     }
 
     #region colliderのイベントハンドラ

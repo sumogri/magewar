@@ -6,16 +6,18 @@ using System.Collections;
 public class ActionViewControler : MonoBehaviour {
     private Button[] buttons;
     private UIManager manager;
+    private Canvas canvas;
 
 	// Use this for initialization
 	void Start () {
-        gameObject.SetActive(false);
         buttons = gameObject.GetComponentsInChildren<Button>();
         manager = gameObject.transform.parent.GetComponent<UIManager>();
+        canvas = gameObject.GetComponent<Canvas>();
+        this.Hide();
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update () {
         if (Input.GetButtonDown("Cancel"))
         {
             Debug.Log("ActViewCancel");
@@ -26,11 +28,17 @@ public class ActionViewControler : MonoBehaviour {
 
     public void Activate()
     {
-        gameObject.SetActive(true);
+        foreach (Button button in buttons)
+            button.interactable = true;
+        canvas.enabled = true;
+        this.enabled = true;
         EventSystem.current.SetSelectedGameObject(buttons[0].gameObject);
     }
     public void Hide()
     {
-        gameObject.SetActive(false);
+        foreach(Button button in buttons)
+            button.interactable = false;
+        this.enabled = false;
+        canvas.enabled = false;
     }
 }
